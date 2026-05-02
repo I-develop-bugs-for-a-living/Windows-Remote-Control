@@ -1,0 +1,20 @@
+{
+  "name": "remotecontrol",
+  "version": "1.0.0",
+  "description": "LAN virtual mouse with local bridge-hosted Svelte 5 PWA",
+  "scripts": {
+    "build": "npm run build -w packages/shared && npm run build -w apps/pwa && npm run build -w apps/bridge",
+    "dev:pwa": "npm run dev -w apps/pwa",
+    "dev:bridge": "npm run dev -w apps/bridge",
+    "dev": "npm run build -w packages/shared && npm run build -w apps/pwa && npm run dev -w apps/bridge",
+    "package:exe": "npm run build -w packages/shared && npm run build -w apps/pwa && npm run package:exe -w apps/bridge"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
