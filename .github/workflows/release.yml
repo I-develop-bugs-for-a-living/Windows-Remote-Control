@@ -49,6 +49,6 @@ jobs:
         with:
           # You need to specify your GitHub identifier and Repo here (e.g. Author.App)
           # winget requires a specific Identifier format. 
-          identifier: YourGitHubSub.RemoteControl
+          identifier: WoollyMuffin.RemoteControl
           installers-regex: '\.zip$'
           token: ${{ secrets.WINGET_TOKEN }}
