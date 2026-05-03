@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on tags like v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build and Package Executable
+        run: npm run package:exe
+
+      - name: Zip Release folder
+        run: |
+          Compress-Archive -Path release\* -DestinationPath RemoteControlBridge-windows-x64.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: RemoteControlBridge-windows-x64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-winget:
+    name: Publish to Winget
+    runs-on: windows-latest
+    needs: build-and-release
+    steps:
+      - name: Submit to Windows Package Manager Community Repository
+        uses: vedantmgoyal2009/winget-releaser@v2
+        with:
+          # You need to specify your GitHub identifier and Repo here (e.g. Author.App)
+          # winget requires a specific Identifier format. 
+          identifier: YourGitHubSub.RemoteControl
+          installers-regex: '\.zip$'
+          token: ${{ secrets.WINGET_TOKEN }}
